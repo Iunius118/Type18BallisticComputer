@@ -1,0 +1,16 @@
+[
+{
+  "modid": "type18ballisticcomputer",
+  "name": "Type 18 Ballistic Computer",
+  "description": "A Simple ballistic computer for Minecraft's projectiles.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "https://github.com/Iunius118/Type18BallisticComputer",
+  "updateUrl": "",
+  "authorList": ["Iunius118"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
