@@ -1,0 +1,18 @@
+
+# Items
+
+item.type18ballisticcomputer.ballistic_computer.name=Type 18 Ballistic Computer
+
+# Configs
+
+type18ballisticcomputer.config.marker_color=Marker Color
+type18ballisticcomputer.config.marker_color.alpha=Alpha
+type18ballisticcomputer.config.marker_color.red=Red
+type18ballisticcomputer.config.marker_color.green=Green
+type18ballisticcomputer.config.marker_color.blue=Blue
+
+type18ballisticcomputer.config.ballistic=Ballistic Parameters
+type18ballisticcomputer.config.ballistic.max_flight_tick=Max Flight Time
+type18ballisticcomputer.config.ballistic.initial_velocity=Initial Velocity
+type18ballisticcomputer.config.ballistic.gravity_factor=Gravity Factor
+type18ballisticcomputer.config.ballistic.resistance_factor=Resistance Factor
