@@ -1,0 +1,27 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "group": "type18gunsight:gun_sight",
+    "pattern": [
+      "iG",
+      "Pc"
+    ],
+    "key": {
+      "i": {
+        "type": "forge:ore_dict",
+        "ore": "ingotIron"
+      },
+      "G": {
+        "type": "forge:ore_dict",
+        "ore": "blockGlass"
+      },
+      "P": {
+        "item": "minecraft:piston"
+      },
+      "c": {
+        "item": "minecraft:clock"
+      }
+    },
+    "result": {
+      "item": "type18gunsight:gun_sight"
+    }
+  }

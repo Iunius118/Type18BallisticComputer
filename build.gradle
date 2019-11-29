@@ -11,8 +11,8 @@ apply plugin: 'net.minecraftforge.gradle.forge'
 //Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 
 version = "1.12.2-1.0.0.0"
-group = "com.github.iunius118.type18ballisticcomputer" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "Type18BallisticComputer"
+group = "com.github.iunius118.type18gunsight" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+archivesBaseName = "Type18GunSight"
 
 sourceCompatibility = targetCompatibility = "1.8" // Need this here so eclipse task generates correctly.
 compileJava {

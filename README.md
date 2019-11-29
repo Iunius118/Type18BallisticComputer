@@ -1,3 +1,3 @@
-# Type 18 Ballistic Computer
+# Type 18 Gun Sight
 
-Simple ballistic computer for Minecraft's projectiles.
+Type 18 Gun Sight is a Minecraft modification which adds a lead-computing gun sight for Minecraft's projectiles.
