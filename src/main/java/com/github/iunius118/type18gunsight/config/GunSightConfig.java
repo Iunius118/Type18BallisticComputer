@@ -9,6 +9,11 @@ import net.minecraftforge.common.config.Config.RangeInt;
 
 @Config(modid = Type18GunSight.MOD_ID)
 public class GunSightConfig {
+    @Comment("Time between click and shoot, in ticks")
+    @LangKey(Type18GunSight.MOD_ID + ".config.tick_time_to_shoot")
+    @RangeInt(min = 0, max = 20)
+    public static int tickTimeToShoot = 5;
+
     @Comment("Max flight time of the projectile, in ticks")
     @LangKey(Type18GunSight.MOD_ID + ".config.max_flight_tick")
     @RangeInt(min = 0, max = 100)

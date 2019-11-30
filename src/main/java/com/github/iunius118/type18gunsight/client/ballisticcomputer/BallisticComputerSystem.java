@@ -10,6 +10,7 @@ public class BallisticComputerSystem {
 
     public void updateTrackerAndComputer(World world) {
         computer.setBallisticParameters(
+                GunSightConfig.tickTimeToShoot,
                 GunSightConfig.maxFlightTick,
                 GunSightConfig.initialVelocity,
                 GunSightConfig.gravityFactor,

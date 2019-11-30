@@ -2,7 +2,6 @@ package com.github.iunius118.type18gunsight.client.ballisticcomputer;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
@@ -16,6 +15,7 @@ public class BallisticComputer implements IComputer {
     public float rotationYaw;
     public float rotationPitch;
 
+    private int tickTimeToShoot = 5;
     private int tickMaxFuse = 100;
     private double initialVelocity = 3.0;
     private double resistance = 0.99;
@@ -31,10 +31,11 @@ public class BallisticComputer implements IComputer {
         updateBallisticParameters(true, true);
     }
 
-    public void setBallisticParameters(int tickMaxFuse, double initialVelocity, double gravity, double resistance) {
+    public void setBallisticParameters(int tickTimeToShoot, int tickMaxFuse, double initialVelocity, double gravity, double resistance) {
         boolean hasGravityChanged = (this.gravity != gravity);
         boolean hasResistanceChanged = (this.resistance != resistance);
 
+        this.tickTimeToShoot = tickTimeToShoot;
         this.tickMaxFuse = tickMaxFuse;
         this.initialVelocity = initialVelocity;
         this.gravity = gravity;
@@ -125,7 +126,7 @@ public class BallisticComputer implements IComputer {
         }
 
         Vec3d vec3Player = new Vec3d(player.posX, player.posY + player.getEyeHeight(), player.posZ);
-        Vec3d vec3Target = tracker.getTargetPos(world).add(vec3TargetDelta);    // Target position at tick + 1
+        Vec3d vec3Target = tracker.getTargetPos(world).add(vec3TargetDelta.scale(tickTimeToShoot));    // Target position at tick + 5
 
         int t = 1; // Fuse tick to set
 

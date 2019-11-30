@@ -5,6 +5,7 @@ item.type18gunsight.gun_sight.name=Type 18 Gun Sight
 
 # Configs
 
+type18gunsight.config.tick_time_to_shoot=Tick Time to Shoot
 type18gunsight.config.max_flight_tick=Max Flight Time
 type18gunsight.config.initial_velocity=Initial Velocity
 type18gunsight.config.gravity_factor=Gravity Factor
