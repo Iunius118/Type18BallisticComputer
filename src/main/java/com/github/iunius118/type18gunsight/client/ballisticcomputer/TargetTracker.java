@@ -8,9 +8,10 @@ import javax.annotation.Nullable;
 public class TargetTracker implements ITracker {
     private ITarget target;
 
-    private static final int MAX_DELTA_COUNT = 8;
-    private int deltaPointer = 0;
-    private Vec3d[] deltas = new Vec3d[MAX_DELTA_COUNT];
+    private static final int MAX_POS_COUNT = 8;
+    private int posPointer = 0;
+    private Vec3d[] posArray = new Vec3d[MAX_POS_COUNT];
+    private Vec3d oldestPos;
 
     @Override
     public boolean isValid(@Nullable World world) {
@@ -20,7 +21,7 @@ public class TargetTracker implements ITracker {
     @Override
     public void setTarget(@Nullable ITarget targetIn) {
         this.target = targetIn;
-        this.deltas = new Vec3d[MAX_DELTA_COUNT];
+        this.posArray = new Vec3d[MAX_POS_COUNT];
     }
 
     @Override
@@ -60,25 +61,12 @@ public class TargetTracker implements ITracker {
         if (target.getType() == ITarget.Type.BLOCK) {
             return new Vec3d(0.0D, 0.0D, 0.0D);
         } else if (target.getType() == ITarget.Type.ENTITY) {
-            Vec3d vec1 = null;
-            Vec3d vec2 = null;
-            int deltaCount = 0;
+            if (oldestPos != null) {
+                Vec3d targetPos = target.getPos(world);
 
-            for (Vec3d delta : this.deltas) {
-                if (delta != null) {
-                    if (vec1 != null) {
-                        vec2 = vec1.add(delta);
-                    } else {
-                        vec2 = new Vec3d(delta.x, delta.y, delta.z);
-                    }
-
-                    vec1 = vec2;
-                    deltaCount++;
+                if (targetPos != null) {
+                    return targetPos.subtract(oldestPos).scale(1.0D / MAX_POS_COUNT);
                 }
-            }
-
-            if (vec1 != null && deltaCount > 0) {
-                return new Vec3d(vec1.x / deltaCount, vec1.y / deltaCount, vec1.z / deltaCount);
             }
 
             return null;
@@ -90,10 +78,20 @@ public class TargetTracker implements ITracker {
     @Override
     public void update(@Nullable World world, IComputer computer) {
         if (this.isValid(world) && target.getType() == ITarget.Type.ENTITY) {
-            deltas[deltaPointer] = target.getLastTickMotion(world);
+            Vec3d tmpOldestPos = posArray[posPointer];
 
-            if (++deltaPointer >= MAX_DELTA_COUNT) {
-                deltaPointer = 0;
+            if (tmpOldestPos == null) {
+                if (oldestPos == null) {
+                    oldestPos = target.getPos(world);
+                }
+            } else {
+                oldestPos = tmpOldestPos;
+            }
+
+            posArray[posPointer] = target.getPos(world);
+
+            if (++posPointer >= MAX_POS_COUNT) {
+                posPointer = 0;
             }
         }
 
