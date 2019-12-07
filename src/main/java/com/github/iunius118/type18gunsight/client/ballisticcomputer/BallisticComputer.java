@@ -126,7 +126,7 @@ public class BallisticComputer implements IComputer {
         }
 
         Vec3d vec3Player = new Vec3d(player.posX, player.posY + player.getEyeHeight(), player.posZ);
-        Vec3d vec3Target = tracker.getTargetPos(world).add(vec3TargetDelta.scale(tickTimeToShoot));    // Target position at tick + 5
+        Vec3d vec3Target = tracker.getTargetPos(world).add(vec3TargetDelta.scale(tickTimeToShoot));    // Target position at tick + tickTimeToShoot (dead time)
 
         int t = 1; // Fuse tick to set
 
