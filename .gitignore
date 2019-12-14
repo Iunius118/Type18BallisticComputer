@@ -5,13 +5,20 @@
 # Exclude source
 !/src/
 
+# Ignore Data Generators' output
+/src/generated/
+
 # Exclude docs
 !/docs/
+
+# Gradle
+!gradle.properties
+!settings.gradle
+!build.gradle
 
 # Others
 !.gitignore
 !*.md
-!build.gradle
 !LICENSE
 !README_*
 !update.json
