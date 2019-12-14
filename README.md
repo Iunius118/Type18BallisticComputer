@@ -1,6 +1,7 @@
 # Type 18 Gun Sight
 
-Type 18 Gun Sight is a Minecraft modification which adds a lead-computing gun sight for Minecraft's projectiles.  
+Type 18 Gun Sight is a Minecraft modification which adds a lead-computing gun sight for Minecraft's projectiles.
+
 Type 18 Gun Sightは、Minecraftに見越角計算機能付きの照準器を追加するmodです。
 
 ## Download
@@ -25,9 +26,15 @@ Pc
     - このmodでは以下の物理モデルに従って弾丸の運動をシミュレートしている：
 
       ```text
-      motion(1) = direction * initial_velocity
-      motion(t) = motion(t - 1) * resistance_factor - {0, gravity_factor, 0}
-      pos(t) = pos(t - 1) + motion(t)
+      弾丸がワールド内に生成されてからの経過時間を表す整数を t (t >= 0) とする。
+
+      motion(t) = { {0, 0, 0}    (t = 0)
+                  { direction * initial_velocity    (t = 1)
+                  { motion(t - 1) * resistance_factor - {0, gravity_factor, 0}    (t > 1)
+
+      pos(t) = { shooter.pos    (t = 0)
+               { pos(t - 1) + motion(t)    (t => 1)
+
       t 時点での当たり判定は pos(t - 1) → pos(t) の区間で行われる。
       ```
 
