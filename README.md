@@ -26,14 +26,14 @@ Pc
     - このmodでは以下の物理モデルに従って弾丸の運動をシミュレートしている：
 
       ```text
-      弾丸がワールド内に生成されてからの経過時間を表す整数を t (t >= 0) とする。
+      弾丸がワールド内に生成されてからの経過時間を表す整数を t (t ≧ 0) とする。
 
       motion(t) = { {0, 0, 0}    (t = 0)
                   { direction * initial_velocity    (t = 1)
                   { motion(t - 1) * resistance_factor - {0, gravity_factor, 0}    (t > 1)
 
       pos(t) = { shooter.pos    (t = 0)
-               { pos(t - 1) + motion(t)    (t => 1)
+               { pos(t - 1) + motion(t)    (t ≧ 1)
 
       t 時点での当たり判定は pos(t - 1) → pos(t) の区間で行われる。
       ```
