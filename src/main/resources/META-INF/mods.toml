@@ -1,0 +1,27 @@
+modLoader="javafml"
+loaderVersion="[28,)"
+issueTrackerURL="https://github.com/Iunius118/Type18GunSight/issues"
+
+[[mods]]
+modId="type18gunsight"
+version="${version}"
+displayName="Type 18 Gun Sight"
+# updateJSONURL=""
+displayURL="https://github.com/Iunius118/Type18GunSight"
+# logoFile=""
+credits="Iunius118"
+authors="Iunius118"
+description="Adds a lead-computing gun sight."
+
+[[dependencies.type18gunsight]]
+    modId="forge"
+    mandatory=true
+    versionRange="[28,)"
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.type18gunsight]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.14.4]"
+    ordering="NONE"
+    side="BOTH"
