@@ -68,7 +68,7 @@ public class GunSightConfig {
             // client.marker_color
 
             markerColor = builder
-                    .comment("A value of color (ARGB8888 format in 32-bit integer) for the markers on HUD")
+                    .comment("An integer value for the color of markers on HUD, in ARGB8888 format")
                     .translation(Type18GunSight.MOD_ID + ".configgui.marker_color")
                     .defineInRange("markerColor", 0xFF00FF00, Integer.MIN_VALUE, Integer.MAX_VALUE);
 
