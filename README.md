@@ -7,6 +7,7 @@ Type 18 Gun Sightは、Minecraftに見越角計算機能付きの照準器を追
 ## Download
 
 - [**Releases**](https://github.com/Iunius118/Type18GunSight/releases)
+  - v1.14.4-1.0.0.0 (requires Forge 1.14.4-28.1.0+)
   - v1.12.2-1.0.0.0 (requires Forge 1.12.2-1.12.2-14.23.5.2768+)
 
 ## Recipe
