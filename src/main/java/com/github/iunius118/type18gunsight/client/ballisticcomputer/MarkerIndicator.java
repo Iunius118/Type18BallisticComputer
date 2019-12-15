@@ -1,14 +1,14 @@
 package com.github.iunius118.type18gunsight.client.ballisticcomputer;
 
+import com.github.iunius118.type18gunsight.client.util.ClientUtils;
+import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.glu.GLU;
 
 import javax.annotation.Nullable;
 import java.nio.FloatBuffer;
@@ -20,7 +20,7 @@ public class MarkerIndicator implements IIndicator {
     private int tempDisplayWidth = 1;
     private int tempDisplayHeight = 1;
     private int tempGuiScale = 1;
-    private int scaleFactor = 1;
+    private double scaleFactor = 1.0;
 
     private Vec3d targetScreenPos;
     private Vec3d targetFutureScreenPos;
@@ -73,7 +73,8 @@ public class MarkerIndicator implements IIndicator {
 
     @Nullable
     private Vec3d getScreenPos(@Nullable Vec3d pos, float partialTicks) {
-        Entity viewEntity = Minecraft.getMinecraft().getRenderViewEntity();
+        Minecraft mc = Minecraft.getInstance();
+        Entity viewEntity = mc.getRenderViewEntity();
 
         if (pos != null && viewEntity != null) {
 
@@ -83,7 +84,7 @@ public class MarkerIndicator implements IIndicator {
             double lenSq = x * x + y * y + z * z;
             Vec3d look = viewEntity.getLook(partialTicks);
 
-            if (Minecraft.getMinecraft().getRenderManager().options != null && Minecraft.getMinecraft().getRenderManager().options.thirdPersonView == 2) {
+            if (mc.getRenderManager().options != null && mc.getRenderManager().options.thirdPersonView == 2) {
                 look = look.scale(-1);
             }
 
@@ -94,7 +95,7 @@ public class MarkerIndicator implements IIndicator {
                     // Avoid Division by Zero
                     return null;
                 } else {
-                    return getScreensFrom3ds((float) x, (float) y + viewEntity.getEyeHeight(), (float) z);
+                    return getScreensFrom3ds((float) x, (float) y, (float) z);
                 }
             }
         }
@@ -109,7 +110,8 @@ public class MarkerIndicator implements IIndicator {
         float f2 = -MathHelper.cos(-pitch * 0.017453292F);
         float f3 = MathHelper.sin(-pitch * 0.017453292F);
         Vec3d pos = new Vec3d(f1 * f2, f3, f * f2).scale(5.0D);
-        Entity viewEntity = Minecraft.getMinecraft().getRenderViewEntity();
+        Minecraft mc = Minecraft.getInstance();
+        Entity viewEntity = mc.getRenderViewEntity();
 
         if (viewEntity != null) {
             double x = pos.x;
@@ -124,7 +126,7 @@ public class MarkerIndicator implements IIndicator {
 
             Vec3d look = viewEntity.getLook(partialTicks);
 
-            if (Minecraft.getMinecraft().getRenderManager().options != null && Minecraft.getMinecraft().getRenderManager().options.thirdPersonView == 2) {
+            if (mc.getRenderManager().options != null && mc.getRenderManager().options.thirdPersonView == 2) {
                 look = look.scale(-1);
             }
 
@@ -145,23 +147,23 @@ public class MarkerIndicator implements IIndicator {
 
     @Nullable
     private Vec3d getScreensFrom3ds(float x, float y, float z) {
-        GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, modelview);
-        GL11.glGetFloat(GL11.GL_PROJECTION_MATRIX, projection);
-        GL11.glGetInteger(GL11.GL_VIEWPORT, viewport);
+        GL11.glGetFloatv(GL11.GL_MODELVIEW_MATRIX, modelview);
+        GL11.glGetFloatv(GL11.GL_PROJECTION_MATRIX, projection);
+        GL11.glGetIntegerv(GL11.GL_VIEWPORT, viewport);
 
-        boolean result = GLU.gluProject(x, y, z, modelview, projection, viewport, screens);
+        boolean result = ClientUtils.gluProject(x, y, z, modelview, projection, viewport, screens);
+        Minecraft mc = Minecraft.getInstance();
+        MainWindow mainWindow = mc.mainWindow;
 
-        if (result) {
-            Minecraft mc = Minecraft.getMinecraft();
-
-            if (tempDisplayWidth != mc.displayWidth || tempDisplayHeight != mc.displayHeight || tempGuiScale != mc.gameSettings.guiScale) {
-                scaleFactor = new ScaledResolution(mc).getScaleFactor();
-                tempDisplayWidth = mc.displayWidth;
-                tempDisplayHeight = mc.displayHeight;
+        if (result && mainWindow != null) {
+            if (tempDisplayWidth != mainWindow.getWidth() || tempDisplayHeight != mainWindow.getHeight() || tempGuiScale != mc.gameSettings.guiScale) {
+                scaleFactor = mainWindow.getGuiScaleFactor();
+                tempDisplayWidth = mainWindow.getWidth();
+                tempDisplayHeight = mainWindow.getHeight();
                 tempGuiScale = mc.gameSettings.guiScale;
             }
 
-            return new Vec3d(screens.get(0) / scaleFactor, (mc.displayHeight - screens.get(1)) / scaleFactor, 0);
+            return new Vec3d(screens.get(0) / scaleFactor, (tempDisplayHeight - screens.get(1)) / scaleFactor, 0);
         } else {
             return null;
         }

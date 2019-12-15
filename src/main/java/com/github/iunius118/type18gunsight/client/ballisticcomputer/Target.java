@@ -1,9 +1,9 @@
 package com.github.iunius118.type18gunsight.client.ballisticcomputer;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.IEntityMultiPart;
-import net.minecraft.entity.MultiPartEntityPart;
-import net.minecraft.entity.boss.EntityDragon;
+import net.minecraft.entity.boss.dragon.EnderDragonEntity;
+import net.minecraft.entity.boss.dragon.EnderDragonPartEntity;
+import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -29,10 +29,11 @@ public class Target implements ITarget {
     }
 
     public Target(World world, RayTraceResult result) {
-        if (result.typeOfHit == RayTraceResult.Type.ENTITY) {
-            this.setEntity(world, result.entityHit);
-        } else if (result.hitVec != null) {
-            this.setPos(world, result.hitVec.x, result.hitVec.y, result.hitVec.z);
+        if (result.getType() == RayTraceResult.Type.ENTITY) {
+            this.setEntity(world, ((EntityRayTraceResult) result).getEntity());
+        } else if (result.getHitVec() != null) {
+            Vec3d hitVec = result.getHitVec();
+            this.setPos(world, hitVec.x, hitVec.y, hitVec.z);
         }
     }
 
@@ -40,12 +41,8 @@ public class Target implements ITarget {
     public void setEntity(World world, Entity entity) {
         Entity targetEntity = entity;
 
-        if (targetEntity instanceof MultiPartEntityPart) {
-            IEntityMultiPart parent = ((MultiPartEntityPart) targetEntity).parent;
-
-            if (parent instanceof Entity) {
-                targetEntity = (Entity) parent;
-            }
+        if (entity instanceof EnderDragonPartEntity) {
+            targetEntity = ((EnderDragonPartEntity) entity).dragon;
         }
 
         this.type = Type.ENTITY;
@@ -56,8 +53,8 @@ public class Target implements ITarget {
     private Entity getTargetEntityByID(World world, int id, boolean isDragonBody) {
         Entity entity = world.getEntityByID(this.entityId);
 
-        if (isDragonBody && entity instanceof EntityDragon) {
-            return ((EntityDragon) entity).dragonPartBody;
+        if (isDragonBody && entity instanceof EnderDragonEntity) {
+            return ((EnderDragonEntity) entity).field_70987_i;  // EnderDragonEntity.dragonPartBody
         }
 
         return entity;
@@ -77,7 +74,7 @@ public class Target implements ITarget {
         } else if (this.type == Type.ENTITY) {
             Entity entity = getTargetEntityByID(world, this.entityId, true);
 
-            return entity != null && !entity.isDead;
+            return entity != null && entity.isAlive();
         }
 
         return true;
@@ -98,8 +95,8 @@ public class Target implements ITarget {
         } else if (this.type == Type.ENTITY) {
             Entity entity = getTargetEntityByID(world, this.entityId, true);
 
-            if (entity != null && !entity.isDead) {
-                return new Vec3d(entity.posX, entity.posY + entity.height / 2.0D, entity.posZ);
+            if (entity != null && entity.isAlive()) {
+                return new Vec3d(entity.posX, entity.posY + entity.getHeight() / 2.0D, entity.posZ);
             }
         }
 
@@ -123,20 +120,20 @@ public class Target implements ITarget {
     private Vec3d getEntityVisualPos(World world, int entityId, float partialTicks) {
         Entity entity = getTargetEntityByID(world, this.entityId, false);
 
-        if (entity != null && !entity.isDead) {
+        if (entity != null && entity.isAlive()) {
             double bx = entity.posX;
             double by = entity.posY;
             double bz = entity.posZ;
-            float height = entity.height;
+            float height = entity.getHeight();
 
-            if (entity instanceof EntityDragon) {
-                Entity entityDragonBody = ((EntityDragon) entity).dragonPartBody;
+            if (entity instanceof EnderDragonEntity) {
+                Entity entityDragonBody = ((EnderDragonEntity) entity).field_70987_i;   // EnderDragonEntity.dragonPartBody
 
                 if (entityDragonBody != null) {
                     bx = entityDragonBody.posX;
                     by = entityDragonBody.posY;
                     bz = entityDragonBody.posZ;
-                    height = entityDragonBody.height;
+                    height = entityDragonBody.getHeight();
                 }
             }
 
@@ -166,7 +163,7 @@ public class Target implements ITarget {
     private Vec3d getEntityPosDelta(World world, int entityId) {
         Entity entity = getTargetEntityByID(world, entityId, false);
 
-        if (entity != null && !entity.isDead) {
+        if (entity != null && entity.isAlive()) {
             double x = entity.posX - entity.lastTickPosX;
             double y = entity.posY - entity.lastTickPosY;
             double z = entity.posZ - entity.lastTickPosZ;

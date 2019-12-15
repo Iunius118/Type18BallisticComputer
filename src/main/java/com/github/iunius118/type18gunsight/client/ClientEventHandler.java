@@ -1,67 +1,48 @@
 package com.github.iunius118.type18gunsight.client;
 
+
 import com.github.iunius118.type18gunsight.Type18GunSight;
 import com.github.iunius118.type18gunsight.client.ballisticcomputer.BallisticComputerSystem;
 import com.github.iunius118.type18gunsight.config.GunSightConfig;
 import com.github.iunius118.type18gunsight.item.GunSightItem;
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.common.config.Config;
-import net.minecraftforge.common.config.ConfigManager;
-import net.minecraftforge.fml.client.event.ConfigChangedEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.opengl.GL11;
 
 public class ClientEventHandler {
     @SubscribeEvent
-    public void onConfigChangedEvent(ConfigChangedEvent.OnConfigChangedEvent event) {
-        if (event.getModID().equals(Type18GunSight.MOD_ID)) {
-            ConfigManager.sync(Type18GunSight.MOD_ID, Config.Type.INSTANCE);
-        }
-    }
-
-    @SubscribeEvent
-    public void registerModels(ModelRegistryEvent event) {
-        ModelLoader.setCustomModelResourceLocation(Type18GunSight.ITEMS.gun_sight, 0, new ModelResourceLocation(Type18GunSight.ITEMS.gun_sight.getRegistryName(), "inventory"));
-    }
-
-    @SubscribeEvent
-    public void onClientTickEvent(ClientTickEvent event) {
-        if (event.phase == ClientTickEvent.Phase.END) {
+    public void onClientTickEvent(TickEvent.ClientTickEvent event) {
+        if (event.phase == TickEvent.ClientTickEvent.Phase.END) {
             return;
         }
 
-        World world = Minecraft.getMinecraft().world;
+        World world = Minecraft.getInstance().world;
         Type18GunSight.ballisticComputerSystem.updateTrackerAndComputer(world);
     }
 
     @SubscribeEvent
     public void onRenderWorldLastEvent(RenderWorldLastEvent event) {
-        World world = Minecraft.getMinecraft().world;
+        World world = Minecraft.getInstance().world;
         Type18GunSight.ballisticComputerSystem.updateIndicator(world, event.getPartialTicks());
     }
 
     @SubscribeEvent
     public void onRenderGameOverlayEventPre(RenderGameOverlayEvent.Pre event) {
-        Minecraft mc = Minecraft.getMinecraft();
+        Minecraft mc = Minecraft.getInstance();
 
-        if (event.getType() == ElementType.HOTBAR && mc.getRenderManager().options != null && mc.getRenderManager().options.thirdPersonView < 1) {
+        if (event.getType() == RenderGameOverlayEvent.ElementType.HOTBAR && mc.getRenderManager().options != null && mc.getRenderManager().options.thirdPersonView < 1) {
 
-            if (!(mc.player.getHeldItem(EnumHand.MAIN_HAND).getItem() instanceof GunSightItem) && !(mc.player.getHeldItem(EnumHand.OFF_HAND).getItem() instanceof GunSightItem)) {
+            if (!(mc.player.getHeldItem(Hand.MAIN_HAND).getItem() instanceof GunSightItem) && !(mc.player.getHeldItem(Hand.OFF_HAND).getItem() instanceof GunSightItem)) {
                 return;
             }
 
@@ -86,15 +67,15 @@ public class ClientEventHandler {
             BufferBuilder vertexBuffer = tessellator.getBuffer();
             double markerSize = 4.0D;
 
-            GlStateManager.disableDepth();
+            GlStateManager.disableDepthTest();
             GlStateManager.enableBlend();
-            GlStateManager.disableTexture2D();
-            GlStateManager.color(
+            GlStateManager.disableTexture();
+            GlStateManager.color4f(
                     (float) GunSightConfig.marker_color.colorRed,
                     (float) GunSightConfig.marker_color.colorGreen,
                     (float) GunSightConfig.marker_color.colorBlue,
                     (float) GunSightConfig.marker_color.colorAlpha);
-            GlStateManager.glLineWidth(1.0F);
+            GlStateManager.lineWidth(1.0F);
 
             if (vec3Target != null) {
                 double x = vec3Target.x;
@@ -118,8 +99,8 @@ public class ClientEventHandler {
                 tessellator.draw();
             }
 
-            GlStateManager.enableTexture2D();
-            GlStateManager.enableDepth();
+            GlStateManager.enableTexture();
+            GlStateManager.enableDepthTest();
         }
     }
 }

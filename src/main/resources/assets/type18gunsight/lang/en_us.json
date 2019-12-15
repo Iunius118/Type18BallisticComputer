@@ -1,0 +1,10 @@
+{
+  "item.type18gunsight.gun_sight": "Type 18 Gun Sight",
+
+  "type18gunsight.configgui.tick_time_to_shoot": "Tick Time to Shoot",
+  "type18gunsight.configgui.max_flight_tick": "Max Flight Time",
+  "type18gunsight.configgui.initial_velocity": "Initial Velocity",
+  "type18gunsight.configgui.gravity_factor": "Gravity Factor",
+  "type18gunsight.configgui.resistance_factor": "Resistance Factor",
+  "type18gunsight.configgui.marker_color": "Marker Color"
+}

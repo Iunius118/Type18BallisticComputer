@@ -1,0 +1,10 @@
+{
+  "item.type18gunsight.gun_sight": "18式照準器",
+
+  "type18gunsight.configgui.tick_time_to_shoot": "発射遅延時間 [tick]",
+  "type18gunsight.configgui.max_flight_tick": "最大飛行時 [tick]",
+  "type18gunsight.configgui.initial_velocity": "初速 [m/tick]",
+  "type18gunsight.configgui.gravity_factor": "重力 [m/tick^2]",
+  "type18gunsight.configgui.resistance_factor": "減速率",
+  "type18gunsight.configgui.marker_color": "マーカーの色"
+}

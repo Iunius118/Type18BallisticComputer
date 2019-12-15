@@ -118,7 +118,7 @@ public class BallisticComputer implements IComputer {
             return;
         }
 
-        Entity player = Minecraft.getMinecraft().player;
+        Entity player = Minecraft.getInstance().player;
 
         if (player == null) {
             isValid = false;

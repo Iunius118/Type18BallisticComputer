@@ -1,33 +1,30 @@
 package com.github.iunius118.type18gunsight;
 
+
 import com.github.iunius118.type18gunsight.client.ClientEventHandler;
 import com.github.iunius118.type18gunsight.client.ballisticcomputer.BallisticComputerSystem;
 import com.github.iunius118.type18gunsight.config.GunSightConfig;
 import com.github.iunius118.type18gunsight.item.GunSightItem;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.common.Mod.EventHandler;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry.ObjectHolder;
+import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.ObjectHolder;
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-@Mod(   modid = Type18GunSight.MOD_ID,
-        name = Type18GunSight.MOD_NAME,
-        version = Type18GunSight.MOD_VERSION,
-        guiFactory = "com.github.iunius118.type18gunsight.client.gui.ConfigGuiFactory")
-@EventBusSubscriber
+@Mod(Type18GunSight.MOD_ID)
 public class Type18GunSight {
     public static final String MOD_ID = "type18gunsight";
     public static final String MOD_NAME = "Type 18 Ballistic Computer";
-    public static final String MOD_VERSION = "1.12.2-1.0.0.0";
-
-    public static final GunSightConfig CONFIG = new GunSightConfig();
-    public static Logger logger;
+    public static final Logger LOGGER = LogManager.getLogger(MOD_NAME);
 
     public static BallisticComputerSystem ballisticComputerSystem;
 
@@ -36,18 +33,25 @@ public class Type18GunSight {
         public static final Item gun_sight = null;
     }
 
-    @EventHandler
-    public void preInit(FMLPreInitializationEvent event) {
-        logger = event.getModLog();
+    public Type18GunSight() {
+        // Register lifecycle event listeners
+        final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+        modEventBus.addListener(this::initClient);
 
-        if (event.getSide().isClient()) {
-            ballisticComputerSystem = new BallisticComputerSystem();
-            MinecraftForge.EVENT_BUS.register(new ClientEventHandler());
-        }
+        // Register config
+        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, GunSightConfig.clientSpec);
     }
 
-    @SubscribeEvent
-    public static void registerItems(RegistryEvent.Register<Item> event) {
-        event.getRegistry().register(new GunSightItem().setRegistryName("gun_sight").setTranslationKey(MOD_ID + ".gun_sight").setCreativeTab(CreativeTabs.COMBAT));
+    public void initClient(final FMLClientSetupEvent event) {
+        ballisticComputerSystem = new BallisticComputerSystem();
+        MinecraftForge.EVENT_BUS.register(new ClientEventHandler());
+    }
+
+    @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
+    public static class RegistryEvents {
+        @SubscribeEvent
+        public static void registerItems(final RegistryEvent.Register<Item> event) {
+            event.getRegistry().register(new GunSightItem(new Item.Properties().group(ItemGroup.COMBAT)).setRegistryName("gun_sight"));
+        }
     }
 }
