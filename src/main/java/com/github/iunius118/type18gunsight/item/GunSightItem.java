@@ -6,7 +6,6 @@ import com.github.iunius118.type18gunsight.client.ballisticcomputer.Target;
 import com.github.iunius118.type18gunsight.client.util.ClientUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.RayTraceResult;
@@ -20,13 +19,12 @@ public class GunSightItem extends Item {
 
     @Override
     public boolean onEntitySwing(ItemStack stack, LivingEntity entity) {
-        PlayerEntity player = Minecraft.getInstance().player;
-        if (entity.world.isRemote && entity == player) {
+        if (entity.world.isRemote && entity == Minecraft.getInstance().player) {
             // Targeting process on Client
             RayTraceResult result = ClientUtils.getMouseOver(MAX_DISTANCE, 1.0F);
             ITracker tracker = Type18GunSight.ballisticComputerSystem.tracker;
 
-            if (player.isSneaking()) {
+            if (Minecraft.getInstance().player.isSneaking()) {
                 // When the player sneaking, release target
                 tracker.setTarget(null);
 
