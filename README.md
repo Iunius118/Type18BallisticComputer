@@ -37,12 +37,13 @@ Pc
 
 ## Configuration
 
-- 1.14.4-xではゲームフォルダ内の`config`フォルダに生成される`type18gunsight-client.toml`をテキストエディタ等で開いて編集する。1.12.2-xではゲーム内のmod一覧から`Type 18 Gun Sight`を選択し、`Config`ボタンをクリックして表示した設定画面で設定する
-- `initialVelocity`は弾丸の初速、`resistanceFactor`は弾丸の速度に毎tick乗算される減速（加速）率、`gravityFactor`は弾丸の垂直方向の速度から毎tick減算される重力値を表す
-- `tickTimeToShoot`はクライアント側で発射ボタンが押されてからサーバー側で弾丸が発射されるまでの時間（プレイヤーの反応時間やボタン押下までの時間を含めて調整してもよい）、`maxFlightTick` は追尾モブの未来位置の予測を行う最大時間（あるいは弾丸に設定されている自滅までの最大飛行時間）を表す。従って追尾モブの未来位置の予測は、現時点より`tickTimeToShoot`後から最大で`tickTimeToShoot + maxFlightTick`後までの間で行われる。
+- 1.14.4-xではゲームフォルダ内の`config`フォルダに生成される`type18gunsight-client.toml`をテキストエディタ等で開いて編集する
+- 1.12.2-xではゲーム内のmod一覧から`Type 18 Gun Sight`を選択し、`Config`ボタンをクリックして表示した設定画面で設定する
+- `initialVelocity`は弾丸の初速、`resistanceFactor`は弾速に毎tick乗算される減速（加速）率、`gravityFactor`は弾速の垂直方向要素から毎tick減算される重力値を表す
+- `tickTimeToShoot`はクライアント側で発射ボタンが押されてからサーバー側で弾丸が発射されるまでの時間（プレイヤーの反応時間やボタン押下までの時間を含めて調整してもよい）、`maxFlightTick` は追尾モブの未来位置の予測を行う最大時間（あるいは弾丸に設定されている自滅までの最大飛行時間）を表す。追尾モブの未来位置の予測は、現時点より`tickTimeToShoot`後から最大で`tickTimeToShoot + maxFlightTick`後までの間で行われる。
 - `marker_color`項目でマーカーの色が変更可能
 
-このmodでは以下の物理モデルに従って弾丸の運動をシミュレートしている：
+なお、このmodでは以下の物理モデルに従って弾丸の運動をシミュレートしている：
 
 ```text
 弾丸がワールド内に生成されてからの経過時間を表す整数を t (t ≧ 0) とする。
