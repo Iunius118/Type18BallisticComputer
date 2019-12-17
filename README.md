@@ -52,7 +52,7 @@ motion(t) = { {0, 0, 0}    (t = 0)
             { motion(t - 1) * resistanceFactor - {0, gravityFactor, 0}    (t > 1)
 
 pos(t) = { shooter.eye_position    (t = 0)
-        { pos(t - 1) + motion(t)    (t ≧ 1)
+         { pos(t - 1) + motion(t)    (t ≧ 1)
 
 t 時点での当たり判定は pos(t - 1) → pos(t) の区間で行われる。
 ```
